@@ -7,8 +7,17 @@ import { SentenceController } from "./controller/SentenceController";
 import { BookController } from "./controller/BookController";
 
 const rootPath = '/api';
+const controllers = {
+    'event': EventController,
+    'activity': ActivityController,
+    'language': LanguageController,
+    'ideogram': IdeogramController,
+    'word': WordController,
+    'sentence': SentenceController,
+    'book': BookController,
+};
 
-function getBaseroutes(Controller, path) {
+function getBaseRoutesController(path, Controller) {
     return [{
         method: "get",
         route: `${rootPath}/${path}`,
@@ -32,12 +41,16 @@ function getBaseroutes(Controller, path) {
     }];
 }
 
+function getBaseRoutes() {
+    let baseRoutes = [];
+
+    Object.keys(controllers).forEach(path => {
+        baseRoutes = baseRoutes.concat(getBaseRoutesController(path, controllers[path]))
+    });
+
+    return baseRoutes;
+}
+
 export const Routes = []
-    .concat(getBaseroutes(EventController, 'event'))
-    .concat(getBaseroutes(ActivityController, 'activity'))
-    .concat(getBaseroutes(LanguageController, 'language'))
-    .concat(getBaseroutes(IdeogramController, 'ideogram'))
-    .concat(getBaseroutes(WordController, 'word'))
-    .concat(getBaseroutes(SentenceController, 'sentence'))
-    .concat(getBaseroutes(BookController, 'book'))
+    .concat(getBaseRoutes())
 ;

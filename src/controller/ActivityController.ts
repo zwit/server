@@ -8,6 +8,12 @@ export class ActivityController extends BaseController {
   }
 
   async all(request: Request, response: Response, next: NextFunction) {
+    if (request.query.where) {
+      const where = JSON.parse(request.query.where);
+
+      return this.entityRepository.find({ where, relations: ["events"] });
+    }
+
     return this.entityRepository.find({ relations: ["events"] });
   }
 }
